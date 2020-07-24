@@ -1,5 +1,5 @@
 [package]
-name = "Illuin"
+name = "illuin"
 version = "0.1.0"
 authors = ["Raboliot le gris <jordan@raboland.fr>"]
 edition = "2018"
