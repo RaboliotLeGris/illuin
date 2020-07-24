@@ -8,8 +8,6 @@ extern crate rocket_contrib;
 extern crate serde_derive;
 extern crate serde_json;
 
-use std::io::ErrorKind;
-
 use rocket_contrib::templates::Template;
 
 mod routes;
