@@ -8,7 +8,8 @@ extern crate rocket_contrib;
 extern crate serde_derive;
 extern crate serde_json;
 
-use rocket_contrib::serve::StaticFiles;
+use std::io::ErrorKind;
+
 use rocket_contrib::templates::Template;
 
 mod routes;
@@ -25,12 +26,15 @@ fn main() {
     let router = rocket::custom(rocket_config);
 
     routes::register_routes(router)
-        .mount("/", StaticFiles::from("static"))
         .attach(Template::fairing())
         .manage(app_config)
         .launch();
 }
 
 fn ensure_storage_path_exist(path: &str) {
-    std::fs::create_dir(path).expect("Unable to create storage folder");
+    match std::fs::create_dir(path) {
+        Ok(_t) => {}
+        Err(ref e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
+        Err(e) => panic!(e),
+    };
 }
