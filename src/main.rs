@@ -9,14 +9,22 @@ extern crate serde_derive;
 extern crate serde_json;
 
 use rocket_contrib::templates::Template;
+use rocket_contrib::serve::StaticFiles;
+
+#[cfg(test)]
+mod api_tests;
 
 mod routes;
 mod cli;
 
-fn main() {
+fn construct() -> rocket::Rocket {
     let app_config = cli::get_config();
     ensure_storage_path_exist(&app_config.storage_path);
 
+    build_rocket(app_config)
+}
+
+fn build_rocket(app_config: cli::Config) -> rocket::Rocket {
     let rocket_config = rocket::Config::build(rocket::config::Environment::Development)
         .port(app_config.port)
         .finalize().unwrap();
@@ -24,9 +32,13 @@ fn main() {
     let router = rocket::custom(rocket_config);
 
     routes::register_routes(router)
+        .mount("/", StaticFiles::from("static"))
         .attach(Template::fairing())
         .manage(app_config)
-        .launch();
+}
+
+fn main() {
+    construct().launch();
 }
 
 fn ensure_storage_path_exist(path: &str) {
