@@ -18,5 +18,8 @@ Small server to host images (Stateless). It only relies on filesystem.
 
 `./Illuin`
 
-#### Get the options
+### Test
+* `make CI` or `cargo check && cargo clippy && cargo test`
+
+#### Get the options of the app
 `cargo run -- -h` or `./illiun -h`
