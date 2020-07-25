@@ -18,7 +18,7 @@ pub fn register_routes(rocket: rocket::Rocket) -> rocket::Rocket {
 }
 
 #[get("/<filename>")]
-fn get_img(config: State<cli::Config>, filename: String) -> Result<NamedFile, io::Error> {
+fn get_img(config: State<cli::AppConfig>, filename: String) -> Result<NamedFile, io::Error> {
     NamedFile::open(Path::new(config.storage_path.as_str()).join(filename))
 }
 
@@ -28,7 +28,7 @@ struct UploadTemplateContext {
 }
 
 #[post("/upload", data = "<data>")]
-fn post_img(config: State<cli::Config>, content_type: &ContentType, data: Data) -> Result<Template, Debug<io::Error>> {
+fn post_img(config: State<cli::AppConfig>, content_type: &ContentType, data: Data) -> Result<Template, Debug<io::Error>> {
     let img_field_name = "img";
     let image = get_multipart_field(content_type, data, img_field_name)?;
 

@@ -3,21 +3,21 @@ extern crate clap;
 use std::path::Path;
 
 #[derive(Debug)]
-pub struct Config {
+pub struct AppConfig {
     pub port: u16,
     pub storage_path: String,
 }
 
-impl Config {
+impl AppConfig {
     fn new(cli_args: clap::ArgMatches) -> Self {
-        Config {
+        AppConfig {
             port: u16::from_str_radix(cli_args.value_of("port").unwrap(), 10).unwrap_or(8080),
             storage_path: cli_args.value_of("storage_path").unwrap().to_string(),
         }
     }
 }
 
-pub fn get_config() -> Config {
+pub fn get_config() -> AppConfig {
     let cli_args = clap::App::new("Illuin")
         .version("0.1.0")
         .author("Jordan P. <jordan@raboland.fr>")
@@ -38,5 +38,5 @@ pub fn get_config() -> Config {
             .takes_value(true))
     .get_matches();
 
-    Config::new(cli_args)
+    AppConfig::new(cli_args)
 }

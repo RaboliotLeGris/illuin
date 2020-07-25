@@ -17,14 +17,14 @@ mod api_tests;
 mod routes;
 mod cli;
 
-fn construct() -> rocket::Rocket {
+fn construct_from_cli() -> rocket::Rocket {
     let app_config = cli::get_config();
     ensure_storage_path_exist(&app_config.storage_path);
 
     build_rocket(app_config)
 }
 
-fn build_rocket(app_config: cli::Config) -> rocket::Rocket {
+fn build_rocket(app_config: cli::AppConfig) -> rocket::Rocket {
     let rocket_config = rocket::Config::build(rocket::config::Environment::Development)
         .port(app_config.port)
         .finalize().unwrap();
@@ -38,7 +38,7 @@ fn build_rocket(app_config: cli::Config) -> rocket::Rocket {
 }
 
 fn main() {
-    construct().launch();
+    construct_from_cli().launch();
 }
 
 fn ensure_storage_path_exist(path: &str) {
