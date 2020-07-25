@@ -10,6 +10,7 @@ extern crate serde_json;
 
 use rocket_contrib::templates::Template;
 use rocket_contrib::serve::StaticFiles;
+use rocket::config::Limits;
 
 #[cfg(test)]
 mod api_tests;

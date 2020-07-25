@@ -6,6 +6,7 @@ use std::path::Path;
 pub struct AppConfig {
     pub port: u16,
     pub storage_path: String,
+    pub tls: bool,
 }
 
 impl AppConfig {
@@ -13,6 +14,7 @@ impl AppConfig {
         AppConfig {
             port: u16::from_str_radix(cli_args.value_of("port").unwrap(), 10).unwrap_or(8080),
             storage_path: cli_args.value_of("storage_path").unwrap().to_string(),
+            tls: cli_args.is_present("tls"),
         }
     }
 }
@@ -36,6 +38,10 @@ pub fn get_config() -> AppConfig {
             .default_value(Path::new("/tmp/illuin").as_os_str().to_str().unwrap())
             .help("Path where the image are stored")
             .takes_value(true))
+        .arg(clap::Arg::with_name("tls")
+            .help("return path that are compatible with TLS")
+            .takes_value(false)
+            .long("tls"))
     .get_matches();
 
     AppConfig::new(cli_args)

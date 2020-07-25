@@ -9,7 +9,7 @@ mod api_tests {
     use rocket::http::{ContentType, Status};
     use rocket::local::Client;
 
-    use crate::{construct_from_cli, ensure_storage_path_exist, build_rocket};
+    use crate::{build_rocket, construct_from_cli, ensure_storage_path_exist};
     use crate::cli::AppConfig;
 
     #[test]
@@ -31,7 +31,8 @@ mod api_tests {
 
         let config = AppConfig {
             port: 8080,
-            storage_path: String::from(default_app_storage_folder.to_str().unwrap())
+            storage_path: String::from(default_app_storage_folder.to_str().unwrap()),
+            tls: false,
         };
 
         // GIVEN

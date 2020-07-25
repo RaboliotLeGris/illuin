@@ -1,20 +1,35 @@
-use crate::cli;
-
 use std::ffi::OsStr;
 use std::fs::File;
 use std::io;
 use std::io::{Error, Write};
 use std::path::Path;
 
-use nanoid::nanoid;
-use rocket::{Data, State};
+use rocket::{Data, Outcome, Request, State};
 use rocket::http::ContentType;
+use rocket::request::FromRequest;
 use rocket::response::{Debug, NamedFile};
 use rocket_contrib::templates::Template;
 use rocket_multipart_form_data::{mime, MultipartFormData, MultipartFormDataError, MultipartFormDataField, MultipartFormDataOptions, RawField};
 
+use nanoid::nanoid;
+
+use crate::cli;
+
 pub fn register_routes(rocket: rocket::Rocket) -> rocket::Rocket {
     rocket.mount("/i", routes![get_img, post_img])
+}
+
+pub struct HostHeader<'a>(pub &'a str);
+
+impl<'a, 'r> FromRequest<'a, 'r> for HostHeader<'a> {
+    type Error = ();
+
+    fn from_request(request: &'a Request) -> rocket::request::Outcome<Self, Self::Error> {
+        match request.headers().get_one("Host") {
+            Some(h) => Outcome::Success(HostHeader(h)),
+            None => Outcome::Forward(()),
+        }
+    }
 }
 
 #[get("/<filename>")]
@@ -28,7 +43,10 @@ struct UploadTemplateContext {
 }
 
 #[post("/upload", data = "<data>")]
-fn post_img(config: State<cli::AppConfig>, content_type: &ContentType, data: Data) -> Result<Template, Debug<io::Error>> {
+fn post_img(config: State<cli::AppConfig>, host: HostHeader, content_type: &ContentType, data: Data) -> Result<Template, Debug<io::Error>> {
+    let hostname = host.0;
+    let http_type = if config.tls { "https" } else { "http" }; // We can probably get it from request headers
+
     let img_field_name = "img";
     let image = get_multipart_field(content_type, data, img_field_name)?;
 
@@ -40,7 +58,7 @@ fn post_img(config: State<cli::AppConfig>, content_type: &ContentType, data: Dat
 
             let mut file = File::create(Path::new(config.storage_path.as_str()).join(&image_name))?;
             file.write_all(&raw.raw)?;
-            let ctx = UploadTemplateContext { url: format!("/i/{}", &image_name) };
+            let ctx = UploadTemplateContext { url: format!("{}://{}/i/{}", http_type, hostname, &image_name) };
             Ok(Template::render("uploaded", &ctx))
         }
         RawField::Multiple(_) => unreachable!(),
