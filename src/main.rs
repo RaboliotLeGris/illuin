@@ -8,9 +8,8 @@ extern crate rocket_contrib;
 extern crate serde_derive;
 extern crate serde_json;
 
-use rocket_contrib::templates::Template;
 use rocket_contrib::serve::StaticFiles;
-use rocket::config::Limits;
+use rocket_contrib::templates::Template;
 
 #[cfg(test)]
 mod api_tests;

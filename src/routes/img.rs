@@ -4,14 +4,13 @@ use std::io;
 use std::io::{Error, Write};
 use std::path::Path;
 
+use nanoid::nanoid;
 use rocket::{Data, Outcome, Request, State};
 use rocket::http::ContentType;
 use rocket::request::FromRequest;
 use rocket::response::{Debug, NamedFile};
 use rocket_contrib::templates::Template;
 use rocket_multipart_form_data::{mime, MultipartFormData, MultipartFormDataError, MultipartFormDataField, MultipartFormDataOptions, RawField};
-
-use nanoid::nanoid;
 
 use crate::cli;
 
@@ -81,7 +80,7 @@ fn get_extension(filename: &Option<String>) -> String {
 fn get_multipart_field(content_type: &ContentType, data: Data, field_name: &str) -> Result<RawField, Debug<io::Error>> {
     let mut options = MultipartFormDataOptions::new();
     options.allowed_fields.push(
-        MultipartFormDataField::raw(field_name).content_type_by_string(Some(mime::IMAGE_STAR)).unwrap(),
+        MultipartFormDataField::raw(field_name).size_limit(64 * 1024 * 1024).content_type_by_string(Some(mime::IMAGE_STAR)).unwrap(),
     );
 
     let mut multipart_form_data = match MultipartFormData::parse(content_type, data, options) {
