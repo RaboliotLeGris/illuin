@@ -25,7 +25,8 @@ fn construct_from_cli() -> rocket::Rocket {
 }
 
 fn build_rocket(app_config: cli::AppConfig) -> rocket::Rocket {
-    let rocket_config = rocket::Config::build(rocket::config::Environment::Development)
+    let rocket_config = rocket::Config::build(rocket::config::Environment::Production)
+        .address("0.0.0.0")
         .port(app_config.port)
         .finalize().unwrap();
 
