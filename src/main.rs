@@ -25,9 +25,15 @@ fn construct_from_cli() -> rocket::Rocket {
 }
 
 fn build_rocket(app_config: cli::AppConfig) -> rocket::Rocket {
+    // If the env var PORT is present, then it overwrites the one provided by the config
+    let port = std::env::var("PORT")
+        .unwrap_or(app_config.port.to_string())
+        .parse()
+        .unwrap_or(8080);
+
     let rocket_config = rocket::Config::build(rocket::config::Environment::Production)
         .address("0.0.0.0")
-        .port(app_config.port)
+        .port(port)
         .finalize().unwrap();
 
     let router = rocket::custom(rocket_config);
