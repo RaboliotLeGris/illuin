@@ -93,7 +93,7 @@ fn get_multipart_field(content_type: &ContentType, data: Data, field_name: &str)
                 MultipartFormDataError::DataTypeError(_) => {
                     return Err(Debug::from(Error::new(std::io::ErrorKind::InvalidInput, "Data not an image")));
                 }
-                _ => panic!("{:?}", err),
+                _ => return Err(Debug::from(Error::new(std::io::ErrorKind::Other, err))),
             }
         }
     };
