@@ -5,7 +5,7 @@ authors = ["Raboliot le gris <jordan@raboland.fr>"]
 edition = "2018"
 
 [dependencies]
-rocket = "0.4.5"
+rocket = "0.4.7"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"

@@ -38,8 +38,8 @@ fn build_rocket(app_config: cli::AppConfig) -> rocket::Rocket {
 
     let router = rocket::custom(rocket_config);
 
-    routes::register_routes(router)
-        .mount("/", StaticFiles::from("static"))
+    routes::register_routes(&app_config.base_route, router)
+        .mount(&app_config.base_route, StaticFiles::from("static"))
         .attach(Template::fairing())
         .manage(app_config)
 }
@@ -52,6 +52,6 @@ fn ensure_storage_path_exist(path: &str) {
     match std::fs::create_dir(path) {
         Ok(_t) => {}
         Err(ref e) if e.kind() == std::io::ErrorKind::AlreadyExists => {}
-        Err(e) => panic!(e),
+        Err(e) => panic!("{}",e),
     };
 }

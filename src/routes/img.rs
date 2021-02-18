@@ -14,8 +14,8 @@ use rocket_multipart_form_data::{mime, MultipartFormData, MultipartFormDataError
 
 use crate::cli;
 
-pub fn register_routes(rocket: rocket::Rocket) -> rocket::Rocket {
-    rocket.mount("/i", routes![get_img, post_img])
+pub fn register_routes(base_route: &String, rocket: rocket::Rocket) -> rocket::Rocket {
+    rocket.mount(&format!("{}i", base_route), routes![get_img, post_img])
 }
 
 pub struct HostHeader<'a>(pub &'a str);
@@ -57,7 +57,7 @@ fn post_img(config: State<cli::AppConfig>, host: HostHeader, content_type: &Cont
 
             let mut file = File::create(Path::new(config.storage_path.as_str()).join(&image_name))?;
             file.write_all(&raw.raw)?;
-            let ctx = UploadTemplateContext { url: format!("{}://{}/i/{}", http_type, hostname, &image_name) };
+            let ctx = UploadTemplateContext { url: format!("{}://{}{}i/{}", http_type, hostname, &config.base_route, &image_name) };
             Ok(Template::render("uploaded", &ctx))
         }
         RawField::Multiple(_) => unreachable!(),
