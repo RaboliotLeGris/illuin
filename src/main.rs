@@ -39,7 +39,6 @@ fn build_rocket(app_config: cli::AppConfig) -> rocket::Rocket {
     let router = rocket::custom(rocket_config);
 
     routes::register_routes(&app_config.base_route, router)
-        .mount(&app_config.base_route, StaticFiles::from("static"))
         .attach(Template::fairing())
         .manage(app_config)
 }
