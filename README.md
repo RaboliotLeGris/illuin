@@ -9,9 +9,9 @@ Illuin is not entirely configuration through the Env vars, it only listens for t
 
 ### CLI parameters
 
-* `--base-route <base_route>`: Prepend all routes with provided value. Format must be like: '/base/' [default: /]
+* `--base-route <base_route>`: Prepend all routes with provided value. Format must be like: `/base/` [default: /]
 * `--port <port>`, `-p <port>`, : Use a the listen port of the app [default: 8080]
-* `--storage-path <storage_path>`, `-s <port>`: Path where the image are stored [default: temporary folder of your OS]
+* `--storage-path <storage_path>`, `-s <storage_path>`: Path where the image are stored [default: temporary folder of your OS]
 * `-h`: display the help information
 
 ### Practical use
@@ -26,11 +26,11 @@ Example: `./illuin --storage-path /srv/illuin/data`
 * To compile it requires `Rust Nightly`
 
 ### How to compile:
-`make build` or `make build-release` (for production)
+`make build` or `make build-release` (for production) or `cargo build` or `cargo build --release` (for production)
 
 ### Run
 #### With cargo (from within the project folder):
-`cargo run -- <ARGS ...>`
+`cargo run -- <ARGS ...>` (`--` is mandatory, it delimits cargo args and the app args)
 
 #### Binary
 *It requires to have the template folder next the the binary.*
