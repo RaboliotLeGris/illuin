@@ -5,15 +5,15 @@ authors = ["Raboliot le gris <jordan@raboland.fr>"]
 edition = "2018"
 
 [dependencies]
-rocket = "0.4.7"
-serde = "1.0"
-serde_json = "1.0"
-serde_derive = "1.0"
+rocket = "0.4.10"
+serde = "1.0.126"
+serde_json = "1.0.64"
+serde_derive = "1.0.126"
 rocket-multipart-form-data = "0.8.1"
-nanoid = "0.3.0"
-clap = "2.33.1"
+nanoid = "0.4.0"
+clap = "2.33.3"
 
 [dependencies.rocket_contrib]
-version = "0.4.5"
+version = "0.4.10"
 default-features = false
 features = ["json", "serve", "tera_templates"]
